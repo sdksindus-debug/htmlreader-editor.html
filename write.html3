@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Cyber Runner</title>
+    <!-- Importing a stylized digital matrix font -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #0d0221; /* Deep Space Indigo */
+            color: #00f0ff; /* Cyber Cyan */
+            overflow: hidden;
+        }
+        /* Grid overlay simulating 90s digital synthetic horizons */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: 
+                linear-gradient(rgba(13, 2, 33, 0.4) 50%, rgba(255, 0, 127, 0.1) 50%),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03), rgba(0, 0, 0, 0), rgba(255, 0, 127, 0.03));
+            z-index: 10;
+            background-size: 100% 6px, 6px 100%;
+            pointer-events: none;
+        }
+        header {
+            background: linear-gradient(90deg, #1a0842 0%, #2a085c 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ff007f; /* Hot Pink Accent */
+            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.4);
+        }
+        h1 {
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: #ff007f;
+            text-shadow: 0 0 8px #ff007f, 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+        .action-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn-retro {
+            background-color: #0d0221;
+            color: #00f0ff;
+            border: 2px solid #00f0ff;
+            padding: 6px 18px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-retro:hover {
+            background-color: #00f0ff;
+            color: #0d0221;
+            box-shadow: 0 0 15px #00f0ff, 0 0 25px rgba(0, 240, 255, 0.5);
+        }
+        .btn-retro.btn-save {
+            border-color: #ff007f;
+            color: #ff007f;
+            box-shadow: 0 0 8px rgba(255, 0, 127, 0.3);
+        }
+        .btn-retro.btn-save:hover {
+            background-color: #ff007f;
+            color: #0d0221;
+            box-shadow: 0 0 15px #ff007f, 0 0 25px rgba(255, 0, 127, 0.5);
+        }
+        #file-input {
+            display: none;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            padding: 15px;
+            gap: 15px;
+            background: radial-gradient(circle at center, #140534 0%, #0d0221 100%);
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 2px solid #3a0ca3;
+            background-color: rgba(15, 4, 41, 0.85);
+            box-shadow: 0 0 15px rgba(58, 12, 163, 0.3);
+            border-radius: 4px;
+        }
+        .panel-title {
+            background-color: #1a0842;
+            padding: 6px 14px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: #00f0ff;
+            border-bottom: 2px solid #3a0ca3;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+        textarea {
+            flex: 1;
+            background-color: #070114;
+            color: #e200f7; /* Electric Purple Code Text */
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.3rem;
+            padding: 15px;
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.4;
+            text-shadow: 0 0 2px rgba(226, 0, 247, 0.4);
+        }
+        /* Synthwave custom scrollbar */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #070114;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #3a0ca3;
+            border-radius: 4px;
+        }
+        iframe {
+            flex: 1;
+            background-color: #ffffff;
+            border: none;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>// NEON_MATRIX_V1.09</h1>
+        <div class="action-group">
+            <input type="file" id="file-input" accept=".html,.htm,.txt" onchange="loadFile(event)">
+            
+            <button class="btn-retro" onclick="triggerFileOpen()">Load Segment</button>
+            <button class="btn-retro btn-save" onclick="saveFile()">Compile .HTML</button>
+            <button class="btn-retro" onclick="runCode()">Execute Code</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Source Input Matrix -->
+        <div class="panel">
+            <div class="panel-title">&gt; SOURCE_STREAM</div>
+            <textarea id="code-input" spellcheck="false" placeholder="Awaiting matrix payload..."><!-- Example code -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            padding-top: 50px; 
+            background: #00f0ff;
+            color: #0d0221;
+        }
+        h1 { font-weight: 900; letter-spacing: 2px; }
+        .box {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            box-shadow: 8px 8px 0px #ff007f;
+            border: 3px solid #0d0221;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>GRID CONNECTED</h1>
+        <p>Your workspace is running inside the simulation frame.</p>
+    </div>
+</body>
+</html></textarea>
+        </div>
+
+        <!-- Render Target Frame -->
+        <div class="panel">
+            <div class="panel-title">&gt; VISUAL_MATRIX_RENDER</div>
+            <iframe id="output-preview"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function runCode() {
+            const code = document.getElementById('code-input').value;
+            const previewFrame = document.getElementById('output-preview');
+            const innerDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            
+            innerDoc.open();
+            innerDoc.write(code);
+            innerDoc.close();
+        }
+
+        function triggerFileOpen() {
+            document.getElementById('file-input').click();
+        }
+
+        function loadFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('code-input').value = e.target.result;
+                runCode();
+            };
+            reader.readAsText(file);
+        }
+
+        function saveFile() {
+            const code = document.getElementById('code-input').value;
+            const blob = new Blob([code], { type: 'text/html' });
+            const link = document.createElement('a');
+            
+            link.download = `build_${Date.now()}.html`;
+            link.href = URL.createObjectURL(blob);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('code-input').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            }
+        });
+
+        window.onload = runCode;
+    </script>
+</body>
+</html>
