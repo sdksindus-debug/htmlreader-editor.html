@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro HTML Runner</title>
+    <!-- Importing a pixel-art font for the retro arcade aesthetic -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'VT323', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #050e05;
+            color: #39ff14; /* Cyberpunk / Terminal Neon Green */
+            overflow: hidden;
+            text-shadow: 0 0 4px rgba(57, 255, 20, 0.6);
+        }
+        /* CRT Scanline Filter Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+        header {
+            background-color: #0a1c0a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px double #39ff14;
+        }
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+        .btn-run {
+            background-color: transparent;
+            color: #39ff14;
+            border: 2px solid #39ff14;
+            padding: 4px 16px;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+            transition: all 0.1s ease-in-out;
+        }
+        .btn-run:hover {
+            background-color: #39ff14;
+            color: #050e05;
+            box-shadow: 0 0 15px #39ff14;
+        }
+        .btn-run:active {
+            transform: scale(0.96);
+        }
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            padding: 10px;
+            gap: 10px;
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 2px solid #39ff14;
+            background-color: #071407;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+        .panel-title {
+            background-color: #0a1c0a;
+            padding: 4px 12px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: #39ff14;
+            border-bottom: 2px dashed #39ff14;
+        }
+        textarea {
+            flex: 1;
+            background-color: #040a04;
+            color: #39ff14;
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            padding: 15px;
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.2;
+        }
+        /* Custom neon scrollbar */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #040a04;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #1c4d12;
+            border: 1px solid #39ff14;
+        }
+        /* Keeping preview container pristine or styled if you prefer */
+        iframe {
+            flex: 1;
+            background-color: #ffffff; /* Preserved white for accurate code preview rendering */
+            border: none;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>&gt;_ RETRO_HTML_RUNNER.EXE</h1>
+        <button class="btn-run" onclick="runCode()">[ RUN CODE ]</button>
+    </header>
+
+    <div class="container">
+        <!-- Input Panel -->
+        <div class="panel">
+            <div class="panel-title">SYS.INPUT (SOURCE_CODE)</div>
+            <textarea id="code-input" spellcheck="false" placeholder="INSERT CODE HERE..."><!-- Example code -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            padding-top: 50px; 
+            background: #111;
+            color: #ff007f;
+        }
+        h1 { text-shadow: 0 0 10px #ff007f; }
+        button { 
+            padding: 10px 20px; 
+            background: #ff007f; 
+            color: white; 
+            border: none; 
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>CYBER WORLD</h1>
+    <p>The system execution is verified.</p>
+    <button onclick="alert('BOOT SEQUENCE COMPLETE')">INITIALIZE</button>
+</body>
+</html></textarea>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel">
+            <div class="panel-title">SYS.OUTPUT (LIVE_RENDER)</div>
+            <iframe id="output-preview"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function runCode() {
+            const code = document.getElementById('code-input').value;
+            const previewFrame = document.getElementById('output-preview');
+            const innerDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            
+            innerDoc.open();
+            innerDoc.write(code);
+            innerDoc.close();
+        }
+
+        // Handle Ctrl+Enter execution
+        document.getElementById('code-input').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            }
+        });
+
+        window.onload = runCode;
+    </script>
+</body>
+</html>
