@@ -5,10 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neon Cyber Runner</title>
     <!-- Importing a stylized digital matrix font -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-deep: #0d0221;
+            --bg-panel: #1a0842;
+            --panel-border: #BAAA44;
+            --grid-gold: #D9C640;
+            --bright-yellow: #FCF957;
+            --lime: #CECE06;
+            --muted-gold: #BAAA44;
+            --soft-gold: #E3D050;
+            --deep-red: #95222C;
+            --green: #09AF0B;
+            --text-ink: #0d0221;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,8 +33,8 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: #0d0221; /* Deep Space Indigo */
-            color: #00f0ff; /* Cyber Cyan */
+            background-color: var(--bg-deep);
+            color: var(--bright-yellow);
             overflow: hidden;
         }
         /* Grid overlay simulating 90s digital synthetic horizons */
@@ -31,7 +45,7 @@
             top: 0; left: 0; bottom: 0; right: 0;
             background: 
                 linear-gradient(rgba(13, 2, 33, 0.4) 50%, rgba(255, 0, 127, 0.1) 50%),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.03), rgba(0, 0, 0, 0), rgba(255, 0, 127, 0.03));
+                linear-gradient(90deg, rgba(217, 198, 64, 0.05), rgba(0, 0, 0, 0), rgba(9, 175, 11, 0.05));
             z-index: 10;
             background-size: 100% 6px, 6px 100%;
             pointer-events: none;
@@ -42,14 +56,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid #ff007f; /* Hot Pink Accent */
-            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.4);
+            border-bottom: 3px solid var(--deep-red);
+            box-shadow: 0 4px 20px rgba(217, 198, 64, 0.35);
         }
         h1 {
             font-size: 1.6rem;
             letter-spacing: 3px;
-            color: #ff007f;
-            text-shadow: 0 0 8px #ff007f, 0 0 20px rgba(255, 0, 127, 0.5);
+            color: var(--bright-yellow);
+            text-shadow: 0 0 8px var(--bright-yellow), 0 0 20px rgba(252, 249, 87, 0.45);
         }
         .action-group {
             display: flex;
@@ -57,32 +71,32 @@
             align-items: center;
         }
         .btn-retro {
-            background-color: #0d0221;
-            color: #00f0ff;
-            border: 2px solid #00f0ff;
+            background-color: var(--bg-deep);
+            color: var(--bright-yellow);
+            border: 2px solid var(--grid-gold);
             padding: 6px 18px;
             font-family: 'Share Tech Mono', monospace;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 8px rgba(217, 198, 64, 0.25);
             transition: all 0.2s ease;
         }
         .btn-retro:hover {
-            background-color: #00f0ff;
-            color: #0d0221;
-            box-shadow: 0 0 15px #00f0ff, 0 0 25px rgba(0, 240, 255, 0.5);
+            background-color: var(--grid-gold);
+            color: var(--text-ink);
+            box-shadow: 0 0 15px var(--grid-gold), 0 0 25px rgba(217, 198, 64, 0.5);
         }
         .btn-retro.btn-save {
-            border-color: #ff007f;
-            color: #ff007f;
-            box-shadow: 0 0 8px rgba(255, 0, 127, 0.3);
+            border-color: var(--green);
+            color: var(--green);
+            box-shadow: 0 0 8px rgba(9, 175, 11, 0.3);
         }
         .btn-retro.btn-save:hover {
-            background-color: #ff007f;
-            color: #0d0221;
-            box-shadow: 0 0 15px #ff007f, 0 0 25px rgba(255, 0, 127, 0.5);
+            background-color: var(--green);
+            color: var(--text-ink);
+            box-shadow: 0 0 15px var(--green), 0 0 25px rgba(9, 175, 11, 0.5);
         }
         #file-input {
             display: none;
@@ -93,31 +107,31 @@
             overflow: hidden;
             padding: 15px;
             gap: 15px;
-            background: radial-gradient(circle at center, #140534 0%, #0d0221 100%);
+            background: radial-gradient(circle at center, rgba(186, 170, 68, 0.15) 0%, var(--bg-deep) 100%);
         }
         .panel {
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 100%;
-            border: 2px solid #3a0ca3;
+            border: 2px solid var(--panel-border);
             background-color: rgba(15, 4, 41, 0.85);
-            box-shadow: 0 0 15px rgba(58, 12, 163, 0.3);
+            box-shadow: 0 0 15px rgba(186, 170, 68, 0.25);
             border-radius: 4px;
         }
         .panel-title {
-            background-color: #1a0842;
+            background-color: var(--bg-panel);
             padding: 6px 14px;
             font-size: 1.1rem;
             letter-spacing: 2px;
-            color: #00f0ff;
-            border-bottom: 2px solid #3a0ca3;
-            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+            color: var(--bright-yellow);
+            border-bottom: 2px solid var(--panel-border);
+            text-shadow: 0 0 5px rgba(252, 249, 87, 0.5);
         }
         textarea {
             flex: 1;
             background-color: #070114;
-            color: #e200f7; /* Electric Purple Code Text */
+            color: var(--soft-gold);
             font-family: 'Share Tech Mono', monospace;
             font-size: 1.3rem;
             padding: 15px;
@@ -125,7 +139,7 @@
             resize: none;
             outline: none;
             line-height: 1.4;
-            text-shadow: 0 0 2px rgba(226, 0, 247, 0.4);
+            text-shadow: 0 0 2px rgba(217, 198, 64, 0.4);
         }
         /* Synthwave custom scrollbar */
         textarea::-webkit-scrollbar {
@@ -135,7 +149,7 @@
             background: #070114;
         }
         textarea::-webkit-scrollbar-thumb {
-            background: #3a0ca3;
+            background: var(--panel-border);
             border-radius: 4px;
         }
         iframe {
@@ -173,15 +187,15 @@
             font-family: sans-serif; 
             text-align: center; 
             padding-top: 50px; 
-            background: #00f0ff;
+            background: #FCF957;
             color: #0d0221;
         }
         h1 { font-weight: 900; letter-spacing: 2px; }
         .box {
             display: inline-block;
             padding: 20px;
-            background: white;
-            box-shadow: 8px 8px 0px #ff007f;
+            background: #E3D050;
+            box-shadow: 8px 8px 0px #95222C;
             border: 3px solid #0d0221;
         }
     </style>
