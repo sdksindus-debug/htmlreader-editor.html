@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neon Cyber Runner</title>
-    <!-- Importing a stylized digital matrix font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
+            --bg-base: #090710;
             --bg-deep: #0d0221;
-            --bg-panel: #1a0842;
-            --panel-border: #BAAA44;
-            --grid-gold: #D9C640;
-            --bright-yellow: #FCF957;
-            --lime: #CECE06;
-            --muted-gold: #BAAA44;
-            --soft-gold: #E3D050;
-            --deep-red: #95222C;
+            --bg-panel: #130b2b;
+            --panel-edge: #D9C640;
+            --panel-edge-strong: #FCE957;
+            --gold: #D9C640;
+            --gold-bright: #FCE957;
+            --gold-lime: #CECE06;
             --green: #09AF0B;
-            --text-ink: #0d0221;
+            --red: #B90A1A;
+            --red-deep: #95222C;
+            --text-dark: #0d0221;
+            --text-soft: #F4ED9A;
+            --cell-bg: rgba(255, 255, 255, 0.04);
         }
 
         * {
@@ -28,136 +30,183 @@
             margin: 0;
             padding: 0;
         }
+
+        html, body {
+            height: 100%;
+        }
+
         body {
+            position: relative;
             font-family: 'Share Tech Mono', monospace;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-deep);
-            color: var(--bright-yellow);
+            background:
+                linear-gradient(180deg, rgba(14, 5, 28, 0.98), rgba(9, 7, 16, 1)),
+                var(--bg-base);
+            color: var(--gold-bright);
             overflow: hidden;
         }
-        /* Grid overlay simulating 90s digital synthetic horizons */
+
         body::before {
             content: " ";
-            display: block;
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: 
-                linear-gradient(rgba(13, 2, 33, 0.4) 50%, rgba(255, 0, 127, 0.1) 50%),
-                linear-gradient(90deg, rgba(217, 198, 64, 0.05), rgba(0, 0, 0, 0), rgba(9, 175, 11, 0.05));
-            z-index: 10;
-            background-size: 100% 6px, 6px 100%;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(220, 210, 95, 0.14) 0,
+                    rgba(220, 210, 95, 0.14) 1px,
+                    transparent 1px,
+                    transparent 18px
+                ),
+                repeating-linear-gradient(
+                    to right,
+                    rgba(220, 210, 95, 0.14) 0,
+                    rgba(220, 210, 95, 0.14) 1px,
+                    transparent 1px,
+                    transparent 18px
+                );
             pointer-events: none;
+            z-index: 0;
         }
+
+        body::after {
+            content: " ";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(252, 233, 87, 0.09), transparent 58%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header,
+        .container,
+        .panel,
+        textarea,
+        iframe {
+            position: relative;
+            z-index: 1;
+        }
+
         header {
-            background: linear-gradient(90deg, #1a0842 0%, #2a085c 100%);
-            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid var(--deep-red);
-            box-shadow: 0 4px 20px rgba(217, 198, 64, 0.35);
+            background: linear-gradient(90deg, #1a0842 0%, #2a085c 100%);
+            padding: 14px 20px;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 0 18px rgba(217, 198, 64, 0.5);
         }
+
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             letter-spacing: 3px;
-            color: var(--bright-yellow);
-            text-shadow: 0 0 8px var(--bright-yellow), 0 0 20px rgba(252, 249, 87, 0.45);
+            color: var(--gold-bright);
+            text-shadow: 0 0 8px rgba(252, 233, 87, 0.9), 0 0 22px rgba(217, 198, 64, 0.7);
         }
+
         .action-group {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 12px;
         }
+
         .btn-retro {
-            background-color: var(--bg-deep);
-            color: var(--bright-yellow);
-            border: 2px solid var(--grid-gold);
-            padding: 6px 18px;
+            background: #0a0717;
+            color: var(--gold-bright);
+            border: 2px solid var(--gold);
+            padding: 7px 16px;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            box-shadow: 0 0 8px rgba(217, 198, 64, 0.25);
-            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(217, 198, 64, 0.3);
+            transition: all 0.18s ease;
         }
+
         .btn-retro:hover {
-            background-color: var(--grid-gold);
-            color: var(--text-ink);
-            box-shadow: 0 0 15px var(--grid-gold), 0 0 25px rgba(217, 198, 64, 0.5);
+            background: var(--gold-bright);
+            color: var(--text-dark);
+            box-shadow: 0 0 18px rgba(252, 233, 87, 0.9), 0 0 28px rgba(217, 198, 64, 0.6);
         }
+
         .btn-retro.btn-save {
-            border-color: var(--green);
-            color: var(--green);
-            box-shadow: 0 0 8px rgba(9, 175, 11, 0.3);
+            border-color: var(--gold-lime);
+            color: var(--gold-lime);
+            box-shadow: 0 0 10px rgba(206, 206, 6, 0.28);
         }
+
         .btn-retro.btn-save:hover {
-            background-color: var(--green);
-            color: var(--text-ink);
-            box-shadow: 0 0 15px var(--green), 0 0 25px rgba(9, 175, 11, 0.5);
+            background: var(--gold-lime);
+            color: var(--text-dark);
+            box-shadow: 0 0 18px rgba(206, 206, 6, 0.9), 0 0 28px rgba(206, 206, 6, 0.6);
         }
+
         #file-input {
             display: none;
         }
+
         .container {
             display: flex;
-            flex: 1;
-            overflow: hidden;
-            padding: 15px;
-            gap: 15px;
-            background: radial-gradient(circle at center, rgba(186, 170, 68, 0.15) 0%, var(--bg-deep) 100%);
+            height: calc(100vh - 78px);
+            gap: 14px;
+            padding: 14px;
+            background: radial-gradient(circle at center, rgba(217, 198, 64, 0.07), rgba(9, 7, 16, 0.9) 50%, rgba(9, 7, 16, 1));
         }
+
         .panel {
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            border: 2px solid var(--panel-border);
-            background-color: rgba(15, 4, 41, 0.85);
-            box-shadow: 0 0 15px rgba(186, 170, 68, 0.25);
-            border-radius: 4px;
+            min-height: 0;
+            background: rgba(15, 7, 27, 0.85);
+            border: 2px solid var(--panel-edge);
+            box-shadow: 0 0 15px rgba(217, 198, 64, 0.35);
         }
+
         .panel-title {
-            background-color: var(--bg-panel);
-            padding: 6px 14px;
-            font-size: 1.1rem;
+            padding: 8px 12px;
+            background: rgba(26, 8, 66, 0.9);
+            border-bottom: 2px solid var(--panel-edge);
+            color: var(--gold-bright);
             letter-spacing: 2px;
-            color: var(--bright-yellow);
-            border-bottom: 2px solid var(--panel-border);
-            text-shadow: 0 0 5px rgba(252, 249, 87, 0.5);
+            font-size: 1.05rem;
+            text-shadow: 0 0 6px rgba(252, 233, 87, 0.55);
         }
+
         textarea {
             flex: 1;
-            background-color: #070114;
-            color: var(--soft-gold);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.3rem;
-            padding: 15px;
+            width: 100%;
+            padding: 14px;
             border: none;
             resize: none;
             outline: none;
-            line-height: 1.4;
-            text-shadow: 0 0 2px rgba(217, 198, 64, 0.4);
+            background: rgba(7, 1, 20, 0.9);
+            color: #D1C65F;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.22rem;
+            line-height: 1.5;
+            text-shadow: 0 0 2px rgba(217, 198, 64, 0.35);
         }
-        /* Synthwave custom scrollbar */
+
         textarea::-webkit-scrollbar {
-            width: 8px;
+            width: 9px;
         }
+
         textarea::-webkit-scrollbar-track {
-            background: #070114;
+            background: rgba(7, 1, 20, 0.9);
         }
+
         textarea::-webkit-scrollbar-thumb {
-            background: var(--panel-border);
-            border-radius: 4px;
+            background: linear-gradient(180deg, var(--gold), var(--gold-lime));
+            border-radius: 6px;
         }
+
         iframe {
-            flex: 1;
-            background-color: #ffffff;
-            border: none;
-            height: 100%;
             width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
         }
     </style>
 </head>
@@ -167,7 +216,6 @@
         <h1>// NEON_MATRIX_V1.09</h1>
         <div class="action-group">
             <input type="file" id="file-input" accept=".html,.htm,.txt" onchange="loadFile(event)">
-            
             <button class="btn-retro" onclick="triggerFileOpen()">Load Segment</button>
             <button class="btn-retro btn-save" onclick="saveFile()">Compile .HTML</button>
             <button class="btn-retro" onclick="runCode()">Execute Code</button>
@@ -175,7 +223,6 @@
     </header>
 
     <div class="container">
-        <!-- Source Input Matrix -->
         <div class="panel">
             <div class="panel-title">&gt; SOURCE_STREAM</div>
             <textarea id="code-input" spellcheck="false" placeholder="Awaiting matrix payload..."><!-- Example code -->
@@ -187,15 +234,15 @@
             font-family: sans-serif; 
             text-align: center; 
             padding-top: 50px; 
-            background: #FCF957;
+            background: linear-gradient(180deg, #FCE957, #D9C640);
             color: #0d0221;
         }
         h1 { font-weight: 900; letter-spacing: 2px; }
         .box {
             display: inline-block;
             padding: 20px;
-            background: #E3D050;
-            box-shadow: 8px 8px 0px #95222C;
+            background: #FCE957;
+            box-shadow: 10px 10px 0 #95222C;
             border: 3px solid #0d0221;
         }
     </style>
@@ -209,7 +256,6 @@
 </html></textarea>
         </div>
 
-        <!-- Render Target Frame -->
         <div class="panel">
             <div class="panel-title">&gt; VISUAL_MATRIX_RENDER</div>
             <iframe id="output-preview"></iframe>
@@ -221,7 +267,7 @@
             const code = document.getElementById('code-input').value;
             const previewFrame = document.getElementById('output-preview');
             const innerDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            
+
             innerDoc.open();
             innerDoc.write(code);
             innerDoc.close();
@@ -247,10 +293,10 @@
             const code = document.getElementById('code-input').value;
             const blob = new Blob([code], { type: 'text/html' });
             const link = document.createElement('a');
-            
+
             link.download = `build_${Date.now()}.html`;
             link.href = URL.createObjectURL(blob);
-            
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
